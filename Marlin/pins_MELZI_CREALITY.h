@@ -69,6 +69,11 @@
   #define DOGLCD_CS        LCD_PINS_RS
 #endif
 
+#undef PS_ON_PIN
+#define PS_ON_PIN        29
+
+#undef BEEPER_PIN
+
 /**
   PIN:   0   Port: B0        E0_DIR_PIN                  protected
   PIN:   1   Port: B1        E0_STEP_PIN                 protected
