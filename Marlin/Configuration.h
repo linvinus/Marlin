@@ -116,7 +116,7 @@
  *
  * :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000]
  */
-#define BAUDRATE 250000 //denis
+#define BAUDRATE 500000 //denis 500000
 
 // Enable the Bluetooth serial interface on AT90USB devices
 //#define BLUETOOTH
