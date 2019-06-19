@@ -13159,6 +13159,7 @@ void ok_to_send() {
     }
     SERIAL_PROTOCOLPGM(" P"); SERIAL_PROTOCOL(int(BLOCK_BUFFER_SIZE - planner.movesplanned() - 1));
     SERIAL_PROTOCOLPGM(" B"); SERIAL_PROTOCOL(BUFSIZE - commands_in_queue);
+	SERIAL_PROTOCOLPGM(" S"); SERIAL_PROTOCOL(MYSERIAL0.available());
   #endif
   SERIAL_EOL();
 }
@@ -14901,7 +14902,10 @@ void idle(
     max7219.idle_tasks();
   #endif
 
-  lcd_update();
+  if(planner.movesplanned() < 1 && 
+     commands_in_queue < 1 && 
+	 MYSERIAL0.available() < 1)
+		lcd_update();
 
   host_keepalive();
 
