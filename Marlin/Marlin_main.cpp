@@ -2092,16 +2092,11 @@ void clean_up_after_endstop_or_probe_move() {
         }
       }
 
-      #if ENABLED(BLTOUCH_FORCE_5V_MODE)
-        bltouch_command(BLTOUCH_5V_MODE);
-      #elif ENABLED(BLTOUCH_V3)
-        bltouch_command(BLTOUCH_OD_MODE);
-      #endif
-
       bltouch_command(deploy ? BLTOUCH_DEPLOY : BLTOUCH_STOW);
-      
       #if ENABLED(BLTOUCH_V3)
-        if (deploy) bltouch_command(BLTOUCH_SW_MODE);
+        // The version 3 of BlTouch needs to switch to Alarm & Test mode after deploy
+        // or it keeps on pushing the probes out and ends up in error mode (collision).
+        if (deploy) bltouch_command(BLTOUCH_ALARM);
       #endif
 
       #if ENABLED(DEBUG_LEVELING_FEATURE)
@@ -14905,7 +14900,7 @@ void idle(
   if(planner.movesplanned() < 1 && 
      commands_in_queue < 1 && 
 	 MYSERIAL0.available() < 1)
-		lcd_update();
+		lcd_update(); //denis update screen only when totally idle
 
   host_keepalive();
 
@@ -15309,9 +15304,9 @@ void loop() {
 
   #endif // SDSUPPORT
 
-  if (commands_in_queue < BUFSIZE) get_available_commands();
+  get_available_commands(); //denis
 
-  if (commands_in_queue) {
+  while (commands_in_queue && planner.movesplanned() < (BLOCK_BUFFER_SIZE - 2) ) {
 
     #if ENABLED(SDSUPPORT)
 
